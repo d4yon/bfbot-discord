@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
+GUILD_ID = int(os.getenv("GUILD_ID"))
 
 
 class Bot(commands.Bot):
@@ -23,11 +24,14 @@ class Bot(commands.Bot):
     async def setup_hook(self):
         await self.load_extension("cogs.fun")
         await self.load_extension("cogs.pause")
-        await self.tree.sync()
-        print("✅ Slash commands synchronisées !")
+
+        guild = discord.Object(id=GUILD_ID)
+        self.tree.copy_global_to(guild=guild)
+        await self.tree.sync(guild=guild)
+        print("Slash commands synchronisees !")
 
     async def on_ready(self):
-        print(f"✅ Connecté en tant que {self.user}")
+        print(f"connected as {self.user}")
 
 
 async def main():
