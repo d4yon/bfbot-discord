@@ -26,7 +26,7 @@ class Bot(commands.Bot):
     async def setup_hook(self):
         await self.load_extension("cogs.fun")
         await self.load_extension("cogs.pause")
-        await self.load_extension("cogs.calendrier")
+        await self.load_extension("cogs.calendar")
 
         guild = discord.Object(id=GUILD_ID)
         self.tree.clear_commands(guild=guild)

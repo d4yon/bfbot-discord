@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environnement virtuel
+bfbot/
+.venv/
+venv/
+
+# Variables d'environnement
+.env
+
+# Data
+data/
+
+# MacOS
+.DS_Store
