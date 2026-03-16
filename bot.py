@@ -23,6 +23,7 @@ class Bot(commands.Bot):
     async def setup_hook(self):
         await self.load_extension("cogs.fun")
         await self.load_extension("cogs.pause")
+        await self.load_extension("cogs.jooble_bot_cogs")
 
         guild = discord.Object(id=GUILD_ID)
         self.tree.copy_global_to(guild=guild)
