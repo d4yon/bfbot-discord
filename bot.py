@@ -3,6 +3,7 @@ import os
 import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
+from cogs.llm import LLM 
 
 load_dotenv()
 
@@ -19,10 +20,15 @@ class Bot(commands.Bot):
             command_prefix=commands.when_mentioned_or("!"),
             intents=intents
         )
+        self.llm = LLM()  
 
     async def setup_hook(self):
         await self.load_extension("cogs.fun")
         await self.load_extension("cogs.pause")
+        await self.load_extension("cogs.calendar")
+
+        guild = discord.Object(id=GUILD_ID)
+        self.tree.clear_commands(guild=guild)
         await self.load_extension("cogs.jooble_bot_cogs")
         await self.load_extension("cogs.sandwich")
         await self.load_extension("cogs.python_commands")

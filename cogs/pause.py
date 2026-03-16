@@ -6,8 +6,8 @@ import asyncio
 
 PAUSES = {
     "10:00": 15,
-    "10:48": 3,
     "12:00": 60,
+    "11:00": 5,
     "14:30": 15,
 }
 
@@ -47,7 +47,7 @@ class Pause(commands.Cog):
 
     async def notify_pause(self, heure):
         if self.pause_channel is None:
-            print("Aucun channel de pause defini ! Utilise !set_channel")
+            print("Utilise !set_channel")
             return
 
         await self.pause_channel.send(
@@ -59,11 +59,11 @@ class Pause(commands.Cog):
     @app_commands.command(name="pause", description="Confirme le debut de la pause")
     async def pause(self, interaction: discord.Interaction):
         if not self.waiting_confirm:
-            await interaction.response.send_message("Aucune pause en attente de confirmation !")
+            await interaction.response.send_message("Aucune pause en attente de confirmation ")
             return
 
         if self.pause_active:
-            await interaction.response.send_message("Une pause est deja en cours !")
+            await interaction.response.send_message("Une pause est deja en cours ")
             return
 
         self.waiting_confirm = False
@@ -72,39 +72,39 @@ class Pause(commands.Cog):
         heure_debut = datetime.now().strftime("%H:%M")
 
         await interaction.response.send_message(
-            f"Pause commencee a {heure_debut} par {interaction.user.mention} !\n"
-            f"Duree : {self.current_duree} minutes"
+            f"@everyone\n"
+            f"Pause commencee a {heure_debut} par {interaction.user.mention} \n"
         )
 
         await self.start_countdown(interaction.channel, self.current_duree)
 
     async def start_countdown(self, channel, duree_minutes):
         message = await channel.send(
-            f"Compte a rebours : {duree_minutes} minutes restantes"
+            f"{duree_minutes} minutes restantes"
         )
 
         for minutes_restantes in range(duree_minutes - 1, 0, -1):
             await asyncio.sleep(60)
             await message.edit(content=
-                f"Compte a rebours : {minutes_restantes} minute(s) restante(s)"
+                f"{minutes_restantes} minute(s) restante(s)"
             )
 
         await asyncio.sleep(60)
 
-        self.pause_active = False
         heure_fin = datetime.now().strftime("%H:%M")
 
-        await message.edit(content="La pause est terminee !")
+        await message.edit(content="La pause est terminee ")
+
         await channel.send(
+            f"@everyone\n"
             f"La pause est terminee ! ({heure_fin})\n"
             f"Retour au travail."
         )
 
     @commands.command()
     async def set_channel(self, ctx):
-        """Definit ce channel comme channel de pause"""
         self.pause_channel = ctx.channel
-        await ctx.send(f"Channel de pause defini sur {ctx.channel.mention} !")
+        await ctx.send(f"Channel de pause defini sur {ctx.channel.mention} ")
 
     @app_commands.command(name="pause_status", description="Affiche le statut actuel des pauses")
     async def pause_status(self, interaction: discord.Interaction):
