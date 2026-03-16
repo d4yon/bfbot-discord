@@ -3,6 +3,7 @@ import os
 import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
+from cogs.llm import LLM 
 
 load_dotenv()
 
@@ -20,12 +21,15 @@ class Bot(commands.Bot):
             command_prefix=commands.when_mentioned_or("!"),
             intents=intents
         )
+        self.llm = LLM()  # ← instance partagée
 
     async def setup_hook(self):
         await self.load_extension("cogs.fun")
         await self.load_extension("cogs.pause")
+        await self.load_extension("cogs.calendrier")
 
         guild = discord.Object(id=GUILD_ID)
+        self.tree.clear_commands(guild=guild)
         self.tree.copy_global_to(guild=guild)
         await self.tree.sync(guild=guild)
         print("Slash commands synchronisees !")
@@ -36,7 +40,7 @@ class Bot(commands.Bot):
 
 async def main():
     bot = Bot()
-    await bot.start(TOKEN) 
+    await bot.start(TOKEN)
 
 
 asyncio.run(main())
